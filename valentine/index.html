@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>  
+<title>Will You Be My Valentine?</title>
+<style>
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #ffe6f2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  text-align: center;
+  color: #e91e63;
+  overflow: hidden; 
+}
+
+.container {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+h1 {
+  font-size: 3em;
+  margin-bottom: 20px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+p {
+  font-size: 1.2em;
+  margin-bottom: 30px;
+  animation: fadeInUp 1s ease-in-out;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+button {
+  background-color: #f48fb1; 
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 30px;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #e91e63;
+  transform: scale(1.05); 
+}
+
+#noButton {
+  position: relative;
+}
+
+#yesButton {
+  animation: heartBeat 1.5s infinite;
+}
+
+@keyframes heartBeat {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.confetti {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #f06292;
+  border-radius: 50%;
+  top: -10px; 
+  animation: confettiFall linear both;
+  animation-delay: var(--confetti-delay);
+  opacity: 0; 
+  animation-fill-mode: both;
+  animation-duration: 1.5s;
+}
+
+.confetti-piece:nth-child(even) {
+  background-color: #e91e63; 
+}
+
+@keyframes confettiFall {
+  0% {
+      opacity: 0;
+      transform: translateY(0) rotateX(0);
+  }
+  50%{
+      opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(105vh) rotateX(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.heart {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    clip-path: polygon(50% 0%, 0% 50%, 50% 100%, 100% 50%);
+    animation: floatHeart 4s linear infinite;
+    opacity: 0;
+    z-index: 0; 
+}
+
+@keyframes floatHeart {
+    0% {
+        transform: translateY(0) translateX(0) rotate(45deg);
+        opacity: 0;
+    }
+    20%{
+        opacity:1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-150vh) translateX(var(--heart-x)) rotate(45deg);
+        opacity: 0;
+    }
+}
+
+.play-music-link {
+    color: #f48fb1;
+    text-decoration: none;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: inline-block; 
+    transition: color 0.3s ease; 
+}
+
+.play-music-link:hover {
+    color: #e91e63;
+}
+
+
+@media (max-width: 768px) {
+  .container {
+    padding: 30px;
+  }
+
+  h1 {
+    font-size: 2.5em;
+  }
+
+  p {
+    font-size: 1em;
+  }
+
+  button {
+    padding: 12px 24px;
+    font-size: 1em;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Will You Be My Valentine?</h1>
+  <a href="https://music.apple.com/za/album/on-you-feat-tellaman/1474342956?i=1474343236" class="play-music-link" onclick="playMusic(); return false;">✨ Click here to set the mood! ✨</a>
+  <p>I have a question for you that I've been longing to ask...  💖</p>
+  <p>You bring so much joy and happiness into my life, and I can't imagine Valentine's Day without you. 🥰</p>
+  <p>So, with all my heart...</p>
+  <div class="buttons">
+    <button id="yesButton">Yes!</button>
+    <button id="noButton">No</button>
+  </div>
+</div>
+
+<div class="confetti"></div>
+
+<audio id="backgroundMusic" loop style="display:none;">
+    <source src="https://music.apple.com/za/album/on-you-feat-tellaman/1474342956?i=1474343236" type="audio">
+</audio>
+
+<script>
+  const yesButton = document.getElementById("yesButton");
+  const noButton = document.getElementById("noButton");
+  const container = document.querySelector(".container");
+  const confettiContainer = document.querySelector(".confetti");
+  const backgroundMusic = document.getElementById("backgroundMusic");
+
+  noButton.addEventListener("mouseover", () => {
+    const containerRect = container.getBoundingClientRect();
+    const noButtonRect = noButton.getBoundingClientRect();
+
+    const maxX = containerRect.width - noButtonRect.width;
+    const maxY = containerRect.height - noButtonRect.height;
+
+    const randomX = Math.floor(Math.random() * maxX);
+    const randomY = Math.floor(Math.random() * maxY);
+
+    noButton.style.position = 'absolute';
+    noButton.style.left = randomX + 'px';
+    noButton.style.top = randomY + 'px';
+
+  });
+
+  function createConfetti() {
+    const numConfetti = 100;
+    for (let i = 0; i < numConfetti; i++) {
+      const confettiPiece = document.createElement("div");
+      confettiPiece.classList.add("confetti-piece");
+      confettiPiece.style.left = `${Math.random() * 100}vw`;
+      confettiPiece.style.setProperty('--confetti-delay', `${Math.random() * 5}s`);  
+      confettiPiece.style.animationDuration = `${Math.random() * 3 + 2}s`; 
+      confettiContainer.appendChild(confettiPiece);
+    }
+  }
+
+  function createHearts() {
+    const numHearts = 20; 
+    for (let i = 0; i < numHearts; i++) {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        const randomX = Math.random() * 100; 
+        heart.style.setProperty('--heart-x', `${randomX}vw`);
+        heart.style.animationDelay = `${Math.random() * 3}s`;
+        heart.style.left = `${randomX}vw`;
+        document.body.appendChild(heart);
+    }
+  }
+
+  function playMusic() {
+      backgroundMusic.play();
+  }
+
+  yesButton.addEventListener("click", () => {
+      container.innerHTML = `<h1>Yay! 🥰</h1><p>I'm so happy! Can't wait to spend Valentine's Day with you! 💖</p>`;
+      createConfetti(); 
+      createHearts();
+  });
+</script>
+</body>
+</html>
+
+<!-- Almost done :) -->
